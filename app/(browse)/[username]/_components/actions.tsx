@@ -3,7 +3,7 @@
 import { toast } from "sonner";
 import { useTransition } from "react";
 
-import { onFollow, onUnFollow } from "@/actions/follow";
+import { onFollow, onUnfollow } from "@/actions/follow";
 import { Button } from "@/components/ui/button";
 import { onBlock, onUnblock } from "@/actions/block";
 
@@ -26,7 +26,7 @@ export const Actions = ({ isFollowing, userId, userName }: ActionsProps) => {
 
   const handleUnfollow = () => {
     startTransition(() => {
-      onUnFollow(userId)
+      onUnfollow(userId)
         .then(() => toast.success(`You have unfollowed ${userName}💔`))
         .catch(() => toast.error("Something went wrong, failed to follow 😥"));
     });
