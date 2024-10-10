@@ -6,9 +6,10 @@ import {
   IngressClient,
   IngressVideoEncodingPreset,
   RoomServiceClient,
-  type CreateIngressOptions,
   TrackSource,
+  type CreateIngressOptions,
 } from "livekit-server-sdk";
+
 import { revalidatePath } from "next/cache";
 
 import { db } from "@/lib/db";
@@ -83,9 +84,5 @@ export const createIngress = async (ingressType: IngressInput) => {
   });
 
   revalidatePath(`/u/${self.username}/keys`);
-  return {
-    ingressId: ingress.ingressId,
-    url: ingress.url,
-    streamKey: ingress.streamKey,
-  };
+  return ingress;
 };
