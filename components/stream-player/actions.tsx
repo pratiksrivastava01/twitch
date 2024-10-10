@@ -1,29 +1,28 @@
 "use client";
 
-import { useTransition } from "react";
-import { Button } from "../ui/button";
+import React, { useTransition } from "react";
 import { Heart } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Skeleton } from "../ui/skeleton";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-
-import { onFollow, onUnFollow } from "@/actions/follow";
 import { toast } from "sonner";
 
-interface ActionsProps {
-  hostIdentity: string;
-  isFollowing: boolean;
-  isHost: boolean;
-}
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
+import { onFollow, onUnfollow } from "@/actions/follow";
 
-export const Actions = ({
+export function Actions({
   hostIdentity,
   isFollowing,
   isHost,
-}: ActionsProps) => {
+}: {
+  hostIdentity: string;
+  isFollowing: boolean;
+  isHost: boolean;
+}) {
   const { userId } = useAuth();
   const router = useRouter();
+
   const [isPending, startTransition] = useTransition();
 
   const handleFollow = () => {
@@ -38,7 +37,7 @@ export const Actions = ({
 
   const handleUnfollow = () => {
     startTransition(() => {
-      onUnFollow(hostIdentity)
+      onUnfollow(hostIdentity)
         .then((data) =>
           toast.success(`You have unfollowed ${data.following.username}.`)
         )
@@ -74,7 +73,7 @@ export const Actions = ({
       {isFollowing ? "Unfollow" : "Follow"}
     </Button>
   );
-};
+}
 
 export function ActionsSkeleton() {
   return <Skeleton className="h-10 w-full lg:w-24" />;
