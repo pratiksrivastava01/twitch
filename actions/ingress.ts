@@ -8,6 +8,8 @@ import {
   RoomServiceClient,
   TrackSource,
   type CreateIngressOptions,
+  IngressAudioOptions,
+  IngressVideoOptions,
 } from "livekit-server-sdk";
 
 import { revalidatePath } from "next/cache";
@@ -56,14 +58,20 @@ export const createIngress = async (ingressType: IngressInput) => {
   if (ingressType === IngressInput.WHIP_INPUT) {
     options.bypassTranscoding = true;
   } else {
-    options.video = {
-      source: TrackSource.CAMERA,
-      preset: IngressVideoEncodingPreset.H264_1080P_30FPS_3_LAYERS,
-    };
-    options.audio = {
+    video: new IngressVideoOptions({
+      source: TrackSource.SCREEN_SHARE,
+      encodingOptions: {
+        case: "preset",
+        value: IngressVideoEncodingPreset.H264_1080P_30FPS_3_LAYERS,
+      },
+    });
+    audio: new IngressAudioOptions({
       source: TrackSource.MICROPHONE,
-      preset: IngressAudioEncodingPreset.OPUS_STEREO_96KBPS,
-    };
+      encodingOptions: {
+        case: "preset",
+        value: IngressAudioEncodingPreset.OPUS_STEREO_96KBPS,
+      },
+    });
   }
 
   const ingress = await ingressClient.createIngress(ingressType, options);
